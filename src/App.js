@@ -2,7 +2,8 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./component/Layout";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Login
 import Login from "./pages/login/Login";
 import ForgotPassword from "./pages/login/ForgotPassword";
@@ -35,6 +36,15 @@ import ProductDetails from "./pages/product/ProductDetails";
 function App() {
   return (
     <BrowserRouter>
+    <ToastContainer
+  position="top-right"
+  autoClose={2500}
+  hideProgressBar={false}
+  newestOnTop
+  closeOnClick
+  pauseOnHover
+  theme="light"
+/>
       <Routes>
         {/* =========================
             PUBLIC ROUTES
