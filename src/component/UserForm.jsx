@@ -1,30 +1,20 @@
 import { useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import {REACT_APP_API_URL} from "../../config/ApiConfig"
 
-const API_URL = "http://localhost:3001";
 
 const UserForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // =====================================================
-  // TOKEN
-  // =====================================================
 
   const token = localStorage.getItem("token");
-
-  // =====================================================
-  // EDIT DATA
-  // =====================================================
 
   const editData = location.state;
 
   const isEdit = Boolean(editData?._id);
 
-  // =====================================================
-  // STATES
-  // =====================================================
 
   const [name, setName] = useState(editData?.name || "");
   const [mobile, setMobile] = useState(editData?.mobile || "");
@@ -126,8 +116,8 @@ const UserForm = () => {
       // =================================================
 
       const url = isEdit
-        ? `${API_URL}/admin/updateUser`
-        : `${API_URL}/admin/createUser`;
+        ? `${REACT_APP_API_URL}/admin/updateUser`
+        : `${REACT_APP_API_URL}/admin/createUser`;
 
       const res = await axios.post(url, data, {
         headers: {

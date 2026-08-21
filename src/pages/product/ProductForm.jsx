@@ -157,17 +157,9 @@ const ProductForm = () => {
     setPreviewImages(newPreviews);
   };
 
-  // =====================================================
-  // OPEN FILE PICKER
-  // =====================================================
-
   const openFilePicker = () => {
     fileInputRef.current?.click();
   };
-
-  // =====================================================
-  // REMOVE SELECTED IMAGES
-  // =====================================================
 
   const removeImages = () => {
     setImages([]);
