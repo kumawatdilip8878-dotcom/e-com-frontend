@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-import {
-  REACT_APP_API_URL,
-} from "../../config/ApiConfig";
-
+import { REACT_APP_API_URL } from "../../config/ApiConfig";
 
 
 const Dashboard = () => {
@@ -129,26 +126,36 @@ const Dashboard = () => {
   }, []);
 
   // ==========================================
+  // REFRESH
+  // ==========================================
+
+  const handleRefresh = () => {
+    setLoading(true);
+    setOrdersLoading(true);
+
+    fetchDashboard();
+    fetchOrders();
+
+    toast.success("Dashboard refreshed");
+  };
+
+  // ==========================================
   // LOADING
   // ==========================================
 
   if (loading) {
     return (
-      <div className="dashboard-page">
-
+      <div className="dashboard-page dashboard-loading-page">
         <div className="dashboard-loading-box">
-
           <div className="dashboard-loader"></div>
 
           <h2>Loading Dashboard...</h2>
 
           <p>
-            Please wait while we fetch your
-            dashboard data.
+            Please wait while we fetch your dashboard
+            data.
           </p>
-
         </div>
-
       </div>
     );
   }
@@ -160,9 +167,10 @@ const Dashboard = () => {
   return (
     <div className="dashboard-page">
 
-      {/* Background */}
+      {/* Background Glow */}
 
       <div className="dashboard-glow glow-left"></div>
+
       <div className="dashboard-glow glow-right"></div>
 
 
@@ -172,7 +180,8 @@ const Dashboard = () => {
 
       <div className="dashboard-header">
 
-        <div>
+        <div className="dashboard-heading">
+
           <span className="dashboard-label">
             ADMIN CONTROL CENTER
           </span>
@@ -185,22 +194,21 @@ const Dashboard = () => {
             Welcome back! Here's what's happening
             with your store today.
           </p>
+
         </div>
+
 
         <button
           className="refresh-btn"
-          onClick={() => {
-            setLoading(true);
-            setOrdersLoading(true);
-
-            fetchDashboard();
-            fetchOrders();
-
-            toast.success("Dashboard refreshed");
-          }}
+          onClick={handleRefresh}
         >
-          ↻
-          <span>Refresh</span>
+          <span className="refresh-icon">
+            ↻
+          </span>
+
+          <span>
+            Refresh
+          </span>
         </button>
 
       </div>
@@ -212,7 +220,9 @@ const Dashboard = () => {
 
       <div className="dashboard-cards">
 
-        {/* USERS */}
+        {/* ================================
+            TOTAL USERS
+        ================================= */}
 
         <div className="dashboard-card users-card">
 
@@ -227,6 +237,7 @@ const Dashboard = () => {
             </span>
 
           </div>
+
 
           <div className="card-content">
 
@@ -244,12 +255,15 @@ const Dashboard = () => {
 
           </div>
 
+
           <div className="card-decoration"></div>
 
         </div>
 
 
-        {/* PRODUCTS */}
+        {/* ================================
+            TOTAL PRODUCTS
+        ================================= */}
 
         <div className="dashboard-card products-card">
 
@@ -264,6 +278,7 @@ const Dashboard = () => {
             </span>
 
           </div>
+
 
           <div className="card-content">
 
@@ -281,42 +296,6 @@ const Dashboard = () => {
 
           </div>
 
-          <div className="card-decoration"></div>
-
-        </div>
-
-
-        {/* ORDERS */}
-
-        <div className="dashboard-card orders-card">
-
-          <div className="card-top">
-
-            <div className="card-icon">
-              🛒
-            </div>
-
-            <span className="card-growth">
-              Recent
-            </span>
-
-          </div>
-
-          <div className="card-content">
-
-            <p>
-              Total Orders
-            </p>
-
-            <h2>
-              {orders.length}
-            </h2>
-
-            <span className="card-description">
-              Orders received
-            </span>
-
-          </div>
 
           <div className="card-decoration"></div>
 
@@ -330,6 +309,8 @@ const Dashboard = () => {
       ====================================== */}
 
       <div className="recent-orders">
+
+        {/* Orders Header */}
 
         <div className="orders-header">
 
@@ -349,6 +330,7 @@ const Dashboard = () => {
 
           </div>
 
+
           <div className="orders-count">
             {orders.length} Orders
           </div>
@@ -356,7 +338,9 @@ const Dashboard = () => {
         </div>
 
 
-        {/* Loading */}
+        {/* ======================================
+            ORDERS LOADING
+        ====================================== */}
 
         {ordersLoading ? (
 
@@ -372,7 +356,9 @@ const Dashboard = () => {
 
         ) : orders.length === 0 ? (
 
-          /* No Orders */
+          /* ====================================
+             NO ORDERS
+          ==================================== */
 
           <div className="no-orders">
 
@@ -385,15 +371,16 @@ const Dashboard = () => {
             </h3>
 
             <p>
-              There are currently no orders
-              available.
+              There are currently no orders available.
             </p>
 
           </div>
 
         ) : (
 
-          /* Orders Table */
+          /* ====================================
+             ORDERS TABLE
+          ==================================== */
 
           <div className="orders-table-wrapper">
 
@@ -402,12 +389,31 @@ const Dashboard = () => {
               <thead>
 
                 <tr>
-                  <th>S.No</th>
-                  <th>Order ID</th>
-                  <th>User</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Created At</th>
+
+                  <th>
+                    S.No
+                  </th>
+
+                  <th>
+                    Order ID
+                  </th>
+
+                  <th>
+                    User
+                  </th>
+
+                  <th>
+                    Amount
+                  </th>
+
+                  <th>
+                    Status
+                  </th>
+
+                  <th>
+                    Created At
+                  </th>
+
                 </tr>
 
               </thead>
@@ -423,32 +429,43 @@ const Dashboard = () => {
                     }
                   >
 
+                    {/* S.NO */}
+
                     <td>
+
                       <span className="serial-number">
                         {String(index + 1).padStart(
                           2,
                           "0"
                         )}
                       </span>
+
                     </td>
 
+
+                    {/* ORDER ID */}
 
                     <td>
 
                       <strong className="order-id">
+
                         {order.orderId ||
                           order._id ||
                           "N/A"}
+
                       </strong>
 
                     </td>
 
+
+                    {/* USER */}
 
                     <td>
 
                       <div className="user-cell">
 
                         <div className="user-avatar">
+
                           {(
                             order.userId?.name ||
                             order.user?.name ||
@@ -457,13 +474,17 @@ const Dashboard = () => {
                           )
                             .charAt(0)
                             .toUpperCase()}
+
                         </div>
 
+
                         <span>
+
                           {order.userId?.name ||
                             order.user?.name ||
                             order.name ||
                             "N/A"}
+
                         </span>
 
                       </div>
@@ -471,17 +492,23 @@ const Dashboard = () => {
                     </td>
 
 
+                    {/* AMOUNT */}
+
                     <td>
 
                       <strong className="amount">
+
                         ₹
                         {order.totalAmount ||
                           order.amount ||
                           0}
+
                       </strong>
 
                     </td>
 
+
+                    {/* STATUS */}
 
                     <td>
 
@@ -496,18 +523,23 @@ const Dashboard = () => {
                           "pending"
                         }`}
                       >
+
                         <span className="status-dot"></span>
 
                         {order.status ||
                           "Pending"}
+
                       </span>
 
                     </td>
 
 
+                    {/* CREATED DATE */}
+
                     <td>
 
                       <span className="order-date">
+
                         {order.createdAt
                           ? new Date(
                               order.createdAt
@@ -520,6 +552,7 @@ const Dashboard = () => {
                               }
                             )
                           : "N/A"}
+
                       </span>
 
                     </td>
