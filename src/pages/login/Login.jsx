@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,13 +13,10 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://localhost:3001/admin/auth/loginby",
-        {
-          mobile,
-          password,
-        }
-      );
+      const res = await axios.post(`${REACT_APP_API_URL}/admin/auth/loginby`, {
+        mobile,
+        password,
+      });
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
@@ -57,9 +55,7 @@ const Login = () => {
         <button type="submit">Login</button>
 
         <p style={{ marginTop: "15px" }}>
-          <Link to="/forgot-password">
-            Forgot Password?
-          </Link>
+          <Link to="/forgot-password">Forgot Password?</Link>
         </p>
       </form>
     </div>

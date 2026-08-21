@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
 
 const Cart = () => {
   const token = localStorage.getItem("token");
@@ -9,8 +10,6 @@ const Cart = () => {
 
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const API_URL = "http://localhost:3001";
 
   // GET CART
 
@@ -23,7 +22,7 @@ const Cart = () => {
       }
 
       const res = await axios.post(
-        `${API_URL}/api/cart`,
+        `${REACT_APP_API_URL}/api/cart`,
         {},
         {
           headers: {
@@ -54,7 +53,7 @@ const Cart = () => {
       }
 
       const res = await axios.post(
-        `${API_URL}/api/cart/${cartId}`,
+        `${REACT_APP_API_URL}/api/cart/${cartId}`,
         {},
         {
           headers: {
@@ -85,14 +84,14 @@ const Cart = () => {
     }
 
     if (image.startsWith("/uploads/")) {
-      return `${API_URL}${image}`;
+      return `${REACT_APP_IMAGE_URL}${image}`;
     }
 
     if (image.startsWith("uploads/")) {
-      return `${API_URL}/${image}`;
+      return `${REACT_APP_IMAGE_URL}/${image}`;
     }
 
-    return `${API_URL}/uploads/${image}`;
+    return `${REACT_APP_IMAGE_URL}/${image}`;
   };
 
   // PRODUCT DETAILS
@@ -155,13 +154,10 @@ const Cart = () => {
 
         return (
           <div className="cart-card" key={item._id}>
-         
-
             <div
               className="cart-product-click"
               onClick={() => openProductDetails(product)}
             >
-
               <div className="cart-image">
                 {productImage ? (
                   <img src={imageUrl} alt={product.name || "Product"} />

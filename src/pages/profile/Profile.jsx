@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {REACT_APP_API_URL,REACT_APP_IMAGE_URL} from "../../config/ApiConfig"
 
-const API_URL = "http://localhost:3001";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Profile = () => {
   const getProfile = async () => {
     try {
       const res = await axios.post(
-        `${API_URL}/admin/profile/get`,
+        `${REACT_APP_API_URL}/admin/profile/get`,
         {},
         {
           headers: {
@@ -63,7 +63,7 @@ const Profile = () => {
     // Remove starting slash
     const cleanImage = image.replace(/^\/+/, "");
 
-    return `${API_URL}/${cleanImage}`;
+    return `${REACT_APP_IMAGE_URL}/${cleanImage}`;
   };
 
   return (
@@ -78,7 +78,7 @@ const Profile = () => {
           onError={(e) => {
             console.log("PROFILE IMAGE ERROR:", e.currentTarget.src);
 
-            e.currentTarget.src = "http://localhost:3001/profile";
+            e.currentTarget.src = `${REACT_APP_IMAGE_URL}/profile`;
           }}
         />
 

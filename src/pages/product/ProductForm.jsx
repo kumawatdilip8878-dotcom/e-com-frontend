@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { REACT_APP_API_URL } from "../../config/ApiConfig";
+import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -113,7 +113,7 @@ const ProductForm = () => {
               return image;
             }
 
-            return `${REACT_APP_API_URL}/${image}`;
+            return `${REACT_APP_IMAGE_URL}/${image}`;
           });
 
           setPreviewImages(formattedImages);
@@ -369,9 +369,6 @@ const ProductForm = () => {
               )}
 
               {/* REMOVE */}
-
-             
-
             </div>
 
             {/* =================================================

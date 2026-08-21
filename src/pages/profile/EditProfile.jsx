@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const API_URL = "http://localhost:3001";
+import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
 
 const DEFAULT_PROFILE =
   "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
@@ -39,7 +38,7 @@ const EditProfile = () => {
         return;
       }
 
-      const res = await axios.post(`${API_URL}/admin/profile/get`, {
+      const res = await axios.post(`${REACT_APP_API_URL}/admin/profile/get`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -71,7 +70,7 @@ const EditProfile = () => {
             !imageUrl.startsWith("http://") &&
             !imageUrl.startsWith("https://")
           ) {
-            imageUrl = `${API_URL}${imageUrl}`;
+            imageUrl = `${REACT_APP_IMAGE_URL}${imageUrl}`;
           }
 
           setImagePreview(imageUrl);
@@ -168,11 +167,15 @@ const EditProfile = () => {
       // API
       // ===============================================
 
-      const res = await axios.post(`${API_URL}/admin/auth/profile/edit`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios.post(
+        `${REACT_APP_API_URL}/admin/auth/profile/edit`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       console.log("UPDATE PROFILE:", res.data);
 

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import {REACT_APP_API_URL,} from "../../config/ApiConfig"
+
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ const ResetPassword = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3001/admin/auth/resetPassword",
+        `${REACT_APP_API_URL}/admin/auth/resetPassword`,
         {
           mobile,
           password,

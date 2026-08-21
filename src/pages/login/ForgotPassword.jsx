@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import {REACT_APP_API_URL,} from "../../config/ApiConfig"
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const ForgotPassword = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:3001/admin/auth/forget",
+        `${REACT_APP_API_URL}/admin/auth/forget`,
         {
           mobile,
         }

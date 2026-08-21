@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {REACT_APP_API_URL,REACT_APP_IMAGE_URL} from "../../config/ApiConfig"
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const ChangePassword = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3001/admin/changePassword",
+        `${REACT_APP_API_URL}/admin/changePassword`,
         {
           oldPassword: formData.oldPassword,
           newPassword: formData.newPassword,

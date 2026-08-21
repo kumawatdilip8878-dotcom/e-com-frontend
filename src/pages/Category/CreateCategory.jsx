@@ -1,30 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
 
 const CreateCategory = () => {
- 
-
   const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // =====================================================
-  // EDIT DATA
-  // =====================================================
-
   const editData = location.state;
-
-  // =====================================================
-  // API URL
-  // =====================================================
-
-  const API_URL = "http://localhost:3001";
-
-  // =====================================================
-  // STATES
-  // =====================================================
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -38,10 +23,6 @@ const CreateCategory = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // =====================================================
-  // GET CATEGORY IMAGE URL
-  // =====================================================
-
   const getImageUrl = (imagePath) => {
     if (!imagePath) {
       return "";
@@ -51,70 +32,30 @@ const CreateCategory = () => {
 
     console.log("Original Image:", imageValue);
 
-    // ===================================================
-    // FULL URL
-    // ===================================================
-
     if (imageValue.startsWith("http://") || imageValue.startsWith("https://")) {
       return imageValue;
     }
 
-    // ===================================================
-    // REMOVE FRONT SLASH
-    // ===================================================
-
     imageValue = imageValue.replace(/^\/+/, "");
 
-    // ===================================================
-    // IF ALREADY category/ PATH
-    // ===================================================
-
     if (imageValue.startsWith("category/")) {
-      return `${API_URL}/${imageValue}`;
+      return `${REACT_APP_IMAGE_URL}/${imageValue}`;
     }
 
-    // ===================================================
-    // ONLY FILE NAME
-    // ===================================================
-
-    return `${API_URL}/category/${imageValue}`;
+    return `${REACT_APP_IMAGE_URL}/category/${imageValue}`;
   };
-
-  // =====================================================
-  // EDIT DATA + GET CATEGORIES
-  // =====================================================
 
   useEffect(() => {
     console.log("EDIT DATA:", editData);
 
     if (editData) {
-      // =================================================
-      // NAME
-      // =================================================
-
       setName(editData.name || "");
-
-      // =================================================
-      // DESCRIPTION
-      // =================================================
 
       setDescription(editData.description || "");
 
-      // =================================================
-      // PARENT CATEGORY
-      // =================================================
-
       setParentId(editData.parentId?._id || editData.parentId || "");
 
-      // =================================================
-      // STATUS
-      // =================================================
-
       setStatus(editData.status || "Y");
-
-      // =================================================
-      // EXISTING IMAGE
-      // =================================================
 
       let existingImage = "";
 
@@ -141,21 +82,13 @@ const CreateCategory = () => {
       }
     }
 
-    // ===================================================
-    // GET CATEGORIES
-    // ===================================================
-
     fetchCategories();
   }, [editData]);
-
-  // =====================================================
-  // GET ALL CATEGORIES
-  // =====================================================
 
   const fetchCategories = async () => {
     try {
       const res = await axios.post(
-        `${API_URL}/admin/allCategory`,
+        `${REACT_APP_API_URL}/admin/allCategory`,
         {},
         {
           headers: {
@@ -181,10 +114,6 @@ const CreateCategory = () => {
     }
   };
 
-  // =====================================================
-  // IMAGE CHANGE
-  // =====================================================
-
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
 
@@ -192,33 +121,17 @@ const CreateCategory = () => {
       return;
     }
 
-    // ===================================================
-    // CHECK IMAGE TYPE
-    // ===================================================
-
     if (!file.type.startsWith("image/")) {
       alert("Please select a valid image.");
       return;
     }
 
-    // ===================================================
-    // SET IMAGE FILE
-    // ===================================================
-
     setImage(file);
-
-    // ===================================================
-    // PREVIEW
-    // ===================================================
 
     const previewUrl = URL.createObjectURL(file);
 
     setImagePreview(previewUrl);
   };
-
-  // =====================================================
-  // REMOVE IMAGE
-  // =====================================================
 
   const removeImage = () => {
     setImage(null);
@@ -231,30 +144,17 @@ const CreateCategory = () => {
     }
   };
 
-  // =====================================================
-  // IMAGE ERROR
-  // =====================================================
-
   const handleImageError = (e) => {
     console.log("IMAGE LOAD ERROR:", e.target.src);
-
-    // ===================================================
-    // IF IMAGE WAS GENERATED WITHOUT /category
-    // TRY SECOND PATH
-    // ===================================================
 
     if (!e.target.dataset.fallback && editData?.categoryImage) {
       const imageName = String(editData.categoryImage).replace(/^\/+/, "");
 
       e.target.dataset.fallback = "true";
 
-      e.target.src = `${API_URL}/category/${imageName}`;
+      e.target.src = `${REACT_APP_IMAGE_URL}/category/${imageName}`;
     }
   };
-
-  // =====================================================
-  // SUBMIT FORM
-  // =====================================================
 
   const submit = async (e) => {
     e.preventDefault();
@@ -262,78 +162,41 @@ const CreateCategory = () => {
     try {
       setLoading(true);
 
-      // =================================================
-      // FORM DATA
-      // =================================================
-
       const data = new FormData();
-
-      // =================================================
-      // EDIT ID
-      // =================================================
 
       if (editData) {
         data.append("id", editData._id);
       }
 
-      // =================================================
-      // NAME
-      // =================================================
-
       data.append("name", name);
-
-      // =================================================
-      // DESCRIPTION
-      // =================================================
 
       data.append("description", description);
 
-      // =================================================
-      // STATUS
-      // =================================================
-
       data.append("status", status);
-
-      // =================================================
-      // PARENT CATEGORY
-      // =================================================
 
       if (parentId) {
         data.append("parentId", parentId);
       }
 
-      // =================================================
-      // NEW IMAGE
-      // =================================================
-
       if (image) {
         data.append("categoryImage", image);
       }
 
-      // =================================================
-      // API RESPONSE
-      // =================================================
-
       let res;
 
-      // =================================================
-      // UPDATE
-      // =================================================
-
       if (editData) {
-        res = await axios.post(`${API_URL}/admin/updateCategory`, data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+        res = await axios.post(
+          `${REACT_APP_API_URL}/admin/updateCategory`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
           },
-        });
-      }
-
-      // =================================================
-      // CREATE
-      // =================================================
-      else {
-        res = await axios.post(`${API_URL}/admin/category`, data, {
+        );
+      } else {
+        res = await axios.post(`${REACT_APP_API_URL}/admin/category`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
@@ -343,10 +206,6 @@ const CreateCategory = () => {
 
       console.log("Category Submit Response:", res.data);
 
-      // =================================================
-      // SUCCESS
-      // =================================================
-
       alert(
         res.data.message ||
           (editData
@@ -354,15 +213,7 @@ const CreateCategory = () => {
             : "Category created successfully"),
       );
 
-      // =================================================
-      // DASHBOARD UPDATE
-      // =================================================
-
       window.dispatchEvent(new Event("dashboardUpdate"));
-
-      // =================================================
-      // BACK
-      // =================================================
 
       navigate("/category");
     } catch (error) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
 
 const Dashboard = () => {
   const token = localStorage.getItem("token");
@@ -14,8 +15,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [ordersLoading, setOrdersLoading] = useState(true);
 
-  
-
   const fetchDashboard = async () => {
     try {
       if (!token) {
@@ -25,7 +24,7 @@ const Dashboard = () => {
       }
 
       const res = await axios.post(
-        "http://localhost:3001/admin/dashboard",
+        `${REACT_APP_API_URL}/admin/dashboard`,
         {},
         {
           headers: {
@@ -49,7 +48,6 @@ const Dashboard = () => {
     }
   };
 
-
   const fetchOrders = async () => {
     try {
       if (!token) {
@@ -58,7 +56,7 @@ const Dashboard = () => {
       }
 
       const res = await axios.post(
-        "http://localhost:3001/admin/orders",
+        `${REACT_APP_API_URL}/admin/orders`,
         {},
         {
           headers: {
@@ -83,18 +81,10 @@ const Dashboard = () => {
     }
   };
 
-  // ==========================================
-  // USE EFFECT
-  // ==========================================
-
   useEffect(() => {
     fetchDashboard();
     fetchOrders();
   }, []);
-
-  // ==========================================
-  // LOADING
-  // ==========================================
 
   if (loading) {
     return (
@@ -106,37 +96,21 @@ const Dashboard = () => {
     );
   }
 
-  // ==========================================
-  // DASHBOARD
-  // ==========================================
-
   return (
     <div className="dashboard-content">
       <h1>Dashboard</h1>
 
-      {/* ==================================
-          DASHBOARD CARDS
-      ================================== */}
-
       <div className="cards">
-        {/* TOTAL USERS */}
-
         <div className="card">
           <h2>{data.totalUsers}</h2>
           <p>Total Users</p>
         </div>
-
-        {/* TOTAL PRODUCTS */}
 
         <div className="card">
           <h2>{data.totalProducts}</h2>
           <p>Total Products</p>
         </div>
       </div>
-
-      {/* ==================================
-          RECENT ORDERS
-      ================================== */}
 
       <div className="recent-orders">
         <div className="orders-header">
@@ -145,8 +119,6 @@ const Dashboard = () => {
             <p>Latest orders from users</p>
           </div>
         </div>
-
-        {/* ORDER LOADING */}
 
         {ordersLoading ? (
           <div className="orders-loading">Loading orders...</div>
@@ -169,17 +141,11 @@ const Dashboard = () => {
               <tbody>
                 {orders.map((order, index) => (
                   <tr key={order._id || index}>
-                    {/* S.NO */}
-
                     <td>{index + 1}</td>
-
-                    {/* ORDER ID */}
 
                     <td>
                       <strong>{order.orderId || order._id || "N/A"}</strong>
                     </td>
-
-                    {/* USER */}
 
                     <td>
                       {order.userId?.name ||
@@ -188,11 +154,7 @@ const Dashboard = () => {
                         "N/A"}
                     </td>
 
-                    {/* AMOUNT */}
-
                     <td>₹{order.totalAmount || order.amount || 0}</td>
-
-                    {/* STATUS */}
 
                     <td>
                       <span
@@ -204,8 +166,6 @@ const Dashboard = () => {
                         {order.status || "Pending"}
                       </span>
                     </td>
-
-                    {/* CREATED AT */}
 
                     <td>
                       {order.createdAt

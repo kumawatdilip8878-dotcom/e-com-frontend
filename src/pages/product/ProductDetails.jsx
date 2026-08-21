@@ -1,13 +1,12 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
 
 const ProductDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const product = location.state?.product;
-
-  const API_URL = "http://localhost:3001";
 
   console.log("Product Details Data:", product);
 
@@ -23,14 +22,14 @@ const ProductDetails = () => {
     }
 
     if (image.startsWith("/uploads/")) {
-      return `${API_URL}${image}`;
+      return `${REACT_APP_IMAGE_URL}${image}`;
     }
 
     if (image.startsWith("uploads/")) {
-      return `${API_URL}/${image}`;
+      return `${REACT_APP_IMAGE_URL}/${image}`;
     }
 
-    return `${API_URL}/uploads/${image}`;
+    return `${REACT_APP_IMAGE_URL}/uploads/${image}`;
   };
 
   // PRODUCT NOT FOUND
@@ -101,10 +100,7 @@ const ProductDetails = () => {
               </div>
             )}
           </div>
-
-        
         </div>
-
 
         <div className="product-details-content">
           {/* PRODUCT LABEL */}

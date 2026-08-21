@@ -12,7 +12,6 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  
   useEffect(() => {
     getProducts();
   }, []);
@@ -46,7 +45,6 @@ const ProductList = () => {
       setLoading(false);
     }
   };
-
 
   const deleteProduct = async (id) => {
     const confirmDelete = window.confirm(
@@ -88,7 +86,6 @@ const ProductList = () => {
     navigate(`/product/form/${id}`);
   };
 
-
   const getImageUrl = (item) => {
     let imageName = null;
 
@@ -129,8 +126,6 @@ const ProductList = () => {
 
   return (
     <div className="product-page">
-     
-
       <div className="product-header">
         <div>
           <h2>Product List</h2>
@@ -145,7 +140,6 @@ const ProductList = () => {
           ＋ Add Product
         </button>
       </div>
-
 
       <div className="table-box">
         {loading ? (
