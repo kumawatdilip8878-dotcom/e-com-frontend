@@ -36,6 +36,7 @@ const Login = () => {
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
+
         localStorage.setItem(
           "user",
           JSON.stringify(res.data.data)
@@ -66,23 +67,102 @@ const Login = () => {
   return (
     <div className="login-page">
 
-      {/* Background shapes */}
+      {/* ================= BACKGROUND ================= */}
 
-      <div className="login-bg-shape shape-one"></div>
-      <div className="login-bg-shape shape-two"></div>
-      <div className="login-bg-shape shape-three"></div>
+      <div className="login-grid"></div>
+
+      <div className="gradient-orb orb-one"></div>
+      <div className="gradient-orb orb-two"></div>
+      <div className="gradient-orb orb-three"></div>
+
+      {/* Background Dashboard Cards */}
+
+      <div className="floating-card floating-one">
+        <div className="floating-card-header">
+          <span>Revenue</span>
+          <span className="mini-dot"></span>
+        </div>
+
+        <h3>₹84,250</h3>
+
+        <div className="fake-line">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div className="floating-card floating-two">
+
+        <div className="floating-card-header">
+          <span>Products</span>
+          <span>↗</span>
+        </div>
+
+        <div className="product-stat">
+          <strong>1,284</strong>
+          <small>+18.4%</small>
+        </div>
+
+        <div className="fake-bars">
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+        </div>
+
+      </div>
+
+      <div className="floating-card floating-three">
+
+        <div className="floating-card-header">
+          <span>Orders</span>
+          <span>•••</span>
+        </div>
+
+        <div className="order-row">
+          <div className="avatar">JD</div>
+
+          <div>
+            <strong>New Order</strong>
+            <small>Just now</small>
+          </div>
+
+          <b>₹2,499</b>
+        </div>
+
+        <div className="order-row">
+          <div className="avatar purple">AK</div>
+
+          <div>
+            <strong>New Order</strong>
+            <small>2 min ago</small>
+          </div>
+
+          <b>₹1,899</b>
+        </div>
+
+      </div>
+
+
+      {/* ================= MAIN WRAPPER ================= */}
 
       <div className="login-wrapper">
 
-        {/* =====================================
-            LEFT BRAND SECTION
-        ===================================== */}
+        {/* ================= LEFT SIDE ================= */}
 
         <div className="login-brand">
 
           <div className="brand-content">
 
+            {/* Logo */}
+
             <div className="brand-logo">
+
               {REACT_APP_IMAGE_URL ? (
                 <img
                   src={`${REACT_APP_IMAGE_URL}/logo.png`}
@@ -93,22 +173,39 @@ const Login = () => {
                   A
                 </div>
               )}
+
             </div>
 
+
+            <div className="brand-tag">
+              ADMIN CONTROL CENTER
+            </div>
+
+
             <h1>
-              Welcome to
-              <span> Admin Panel</span>
+              Manage your
+              <br />
+
+              <span>
+                business smarter.
+              </span>
             </h1>
 
+
             <p className="brand-description">
-              Manage your users, products and
-              everything from one powerful
+              Everything you need to manage users,
+              products, orders and your entire
+              e-commerce platform from one powerful
               dashboard.
             </p>
+
+
+            {/* Features */}
 
             <div className="brand-features">
 
               <div className="feature-item">
+
                 <div className="feature-icon">
                   ✓
                 </div>
@@ -119,13 +216,15 @@ const Login = () => {
                   </strong>
 
                   <p>
-                    Manage your platform
-                    effortlessly.
+                    Manage your platform effortlessly.
                   </p>
                 </div>
+
               </div>
 
+
               <div className="feature-item">
+
                 <div className="feature-icon">
                   ✓
                 </div>
@@ -136,13 +235,15 @@ const Login = () => {
                   </strong>
 
                   <p>
-                    Your admin account stays
-                    protected.
+                    Your admin account stays protected.
                   </p>
                 </div>
+
               </div>
 
+
               <div className="feature-item">
+
                 <div className="feature-icon">
                   ✓
                 </div>
@@ -153,37 +254,54 @@ const Login = () => {
                   </strong>
 
                   <p>
-                    Everything you need in
-                    one place.
+                    Everything you need in one place.
                   </p>
                 </div>
+
               </div>
 
             </div>
 
           </div>
 
+
           <div className="brand-footer">
-            © 2026 Admin Panel. All rights reserved.
+            © 2026 Admin Panel
+            <span>•</span>
+            All rights reserved.
           </div>
 
         </div>
 
-        {/* =====================================
-            RIGHT LOGIN SECTION
-        ===================================== */}
+
+        {/* ================= RIGHT LOGIN ================= */}
 
         <div className="login-form-section">
 
           <div className="login-card">
 
+            {/* Mobile Logo */}
+
             <div className="mobile-logo">
-              <div className="logo-placeholder">
-                A
-              </div>
+
+              {REACT_APP_IMAGE_URL ? (
+                <img
+                  src={`${REACT_APP_IMAGE_URL}/logo.png`}
+                  alt="Logo"
+                />
+              ) : (
+                <div className="logo-placeholder">
+                  A
+                </div>
+              )}
+
             </div>
 
+
+            {/* Heading */}
+
             <div className="login-heading">
+
               <span className="welcome-text">
                 Welcome back 👋
               </span>
@@ -194,9 +312,13 @@ const Login = () => {
 
               <p>
                 Enter your credentials to
-                continue.
+                continue to your dashboard.
               </p>
+
             </div>
+
+
+            {/* Form */}
 
             <form
               onSubmit={handleLogin}
@@ -214,7 +336,7 @@ const Login = () => {
                 <div className="input-wrapper">
 
                   <span className="input-icon">
-                    ☎
+                    +
                   </span>
 
                   <input
@@ -232,6 +354,7 @@ const Login = () => {
 
               </div>
 
+
               {/* PASSWORD */}
 
               <div className="input-group">
@@ -248,15 +371,16 @@ const Login = () => {
 
                 </div>
 
+
                 <div className="input-wrapper">
 
                   <span className="input-icon">
-                    🔒
+                    •
                   </span>
 
                   <input
                     type="password"
-                    placeholder="Enter password"
+                    placeholder="Enter your password"
                     value={password}
                     onChange={(e) =>
                       setPassword(e.target.value)
@@ -268,7 +392,22 @@ const Login = () => {
 
               </div>
 
-              {/* LOGIN BUTTON */}
+
+              {/* REMEMBER */}
+
+              <div className="remember-row">
+
+                <label>
+                  <input type="checkbox" />
+                  <span>
+                    Remember me
+                  </span>
+                </label>
+
+              </div>
+
+
+              {/* BUTTON */}
 
               <button
                 type="submit"
@@ -284,6 +423,7 @@ const Login = () => {
                 ) : (
                   <>
                     Sign In
+
                     <span className="button-arrow">
                       →
                     </span>
@@ -294,9 +434,24 @@ const Login = () => {
 
             </form>
 
+
+            {/* Security */}
+
             <div className="login-security">
-              <span>🔐</span>
-              Secure admin authentication
+
+              <span className="security-icon">
+                ✓
+              </span>
+
+              <span>
+                Secure admin authentication
+              </span>
+
+            </div>
+
+
+            <div className="login-bottom-text">
+              Protected with enterprise-grade security
             </div>
 
           </div>
