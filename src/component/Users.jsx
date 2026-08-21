@@ -10,6 +10,10 @@ const Users = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // =====================================================
+  // TOKEN
+  // =====================================================
+
   const token = localStorage.getItem("token");
 
   // =====================================================
@@ -23,8 +27,11 @@ const Users = () => {
 
       if (!token) {
         setError("Login token not found. Please login again.");
+        setLoading(false);
         return;
       }
+
+      console.log("API URL:", REACT_APP_API_URL);
 
       const res = await axios.post(
         `${REACT_APP_API_URL}/admin/users`,
@@ -50,7 +57,8 @@ const Users = () => {
       );
 
       setError(
-        error.response?.data?.message || "Unable to fetch users"
+        error.response?.data?.message ||
+          "Unable to fetch users"
       );
     } finally {
       setLoading(false);
@@ -70,12 +78,12 @@ const Users = () => {
       return;
     }
 
-    try {
-      if (!userId) {
-        alert("User ID is missing");
-        return;
-      }
+    if (!userId) {
+      alert("User ID is missing");
+      return;
+    }
 
+    try {
       console.log("DELETE USER ID:", userId);
 
       const res = await axios.post(
@@ -92,15 +100,28 @@ const Users = () => {
 
       console.log("DELETE RESPONSE:", res.data);
 
-      alert(res.data.message || "User deleted successfully");
+      if (res.data.success) {
+        alert(
+          res.data.message ||
+            "User deleted successfully"
+        );
 
-      await getUsers();
+        await getUsers();
 
-      window.dispatchEvent(new Event("dashboardUpdate"));
+        window.dispatchEvent(
+          new Event("dashboardUpdate")
+        );
+      } else {
+        alert(
+          res.data.message ||
+            "Delete user failed"
+        );
+      }
     } catch (error) {
       console.log(
         "DELETE USER ERROR:",
-        error.response?.data || error.message
+        error.response?.data ||
+          error.message
       );
 
       alert(
@@ -115,13 +136,16 @@ const Users = () => {
   // =====================================================
 
   const changeUserStatus = async (userId) => {
-    try {
-      if (!userId) {
-        alert("User ID is missing");
-        return;
-      }
+    if (!userId) {
+      alert("User ID is missing");
+      return;
+    }
 
-      console.log("STATUS USER ID:", userId);
+    try {
+      console.log(
+        "CHANGE STATUS USER ID:",
+        userId
+      );
 
       const res = await axios.post(
         `${REACT_APP_API_URL}/admin/changeUserStatus`,
@@ -135,17 +159,33 @@ const Users = () => {
         }
       );
 
-      console.log("STATUS RESPONSE:", res.data);
+      console.log(
+        "STATUS RESPONSE:",
+        res.data
+      );
 
-      alert(res.data.message || "User status updated");
+      if (res.data.success) {
+        alert(
+          res.data.message ||
+            "User status updated"
+        );
 
-      await getUsers();
+        await getUsers();
 
-      window.dispatchEvent(new Event("dashboardUpdate"));
+        window.dispatchEvent(
+          new Event("dashboardUpdate")
+        );
+      } else {
+        alert(
+          res.data.message ||
+            "Status update failed"
+        );
+      }
     } catch (error) {
       console.log(
-        "STATUS USER ERROR:",
-        error.response?.data || error.message
+        "STATUS ERROR:",
+        error.response?.data ||
+          error.message
       );
 
       alert(
@@ -165,13 +205,18 @@ const Users = () => {
       return;
     }
 
+    console.log(
+      "EDIT USER ID:",
+      user._id
+    );
+
     navigate("/user/form", {
       state: user,
     });
   };
 
   // =====================================================
-  // LOAD USERS
+  // GET USERS ON PAGE LOAD
   // =====================================================
 
   useEffect(() => {
@@ -186,6 +231,7 @@ const Users = () => {
     return (
       <div className="users-container">
         <h1>Users</h1>
+
         <p>Loading users...</p>
       </div>
     );
@@ -241,7 +287,9 @@ const Users = () => {
 
           <button
             className="create-user-btn"
-            onClick={() => navigate("/user/form")}
+            onClick={() =>
+              navigate("/user/form")
+            }
           >
             + Create User
           </button>
@@ -250,7 +298,7 @@ const Users = () => {
 
       </div>
 
-      {/* NO USERS */}
+      {/* USERS */}
 
       {users.length === 0 ? (
 
@@ -347,7 +395,9 @@ const Users = () => {
                         className="user-icon-btn delete"
                         title="Delete User"
                         onClick={() =>
-                          deleteUser(user._id)
+                          deleteUser(
+                            user._id
+                          )
                         }
                       >
                         🗑️
