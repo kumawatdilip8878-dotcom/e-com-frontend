@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { REACT_APP_API_URL, REACT_APP_IMAGE_URL } from "../../config/ApiConfig";
+import { toast } from "react-toastify";
+
+import {
+  REACT_APP_API_URL,
+} from "../../config/ApiConfig";
+
+
 
 const Dashboard = () => {
   const token = localStorage.getItem("token");
@@ -15,10 +21,14 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [ordersLoading, setOrdersLoading] = useState(true);
 
+  // ==========================================
+  // FETCH DASHBOARD
+  // ==========================================
+
   const fetchDashboard = async () => {
     try {
       if (!token) {
-        console.log("Token missing");
+        toast.error("Authentication token missing");
         setLoading(false);
         return;
       }
@@ -30,7 +40,7 @@ const Dashboard = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       console.log("Dashboard Response:", res.data);
@@ -40,13 +50,29 @@ const Dashboard = () => {
           totalUsers: res.data.data?.totalUsers || 0,
           totalProducts: res.data.data?.totalProducts || 0,
         });
+      } else {
+        toast.error(
+          res.data.message || "Dashboard data not found"
+        );
       }
     } catch (error) {
-      console.log("Dashboard Error:", error.response?.data || error.message);
+      console.log(
+        "Dashboard Error:",
+        error.response?.data || error.message
+      );
+
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to load dashboard"
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  // ==========================================
+  // FETCH ORDERS
+  // ==========================================
 
   const fetchOrders = async () => {
     try {
@@ -62,7 +88,7 @@ const Dashboard = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       console.log("Orders Response:", res.data);
@@ -71,63 +97,310 @@ const Dashboard = () => {
         setOrders(res.data.data || []);
       } else {
         setOrders([]);
+
+        toast.error(
+          res.data.message || "Orders not found"
+        );
       }
     } catch (error) {
-      console.log("Orders Error:", error.response?.data || error.message);
+      console.log(
+        "Orders Error:",
+        error.response?.data || error.message
+      );
 
       setOrders([]);
+
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to load orders"
+      );
     } finally {
       setOrdersLoading(false);
     }
   };
+
+  // ==========================================
+  // USE EFFECT
+  // ==========================================
 
   useEffect(() => {
     fetchDashboard();
     fetchOrders();
   }, []);
 
+  // ==========================================
+  // LOADING
+  // ==========================================
+
   if (loading) {
     return (
-      <div className="dashboard-content">
-        <h1>Dashboard</h1>
+      <div className="dashboard-page">
 
-        <div className="dashboard-loading">Loading Dashboard...</div>
+        <div className="dashboard-loading-box">
+
+          <div className="dashboard-loader"></div>
+
+          <h2>Loading Dashboard...</h2>
+
+          <p>
+            Please wait while we fetch your
+            dashboard data.
+          </p>
+
+        </div>
+
       </div>
     );
   }
 
+  // ==========================================
+  // DASHBOARD UI
+  // ==========================================
+
   return (
-    <div className="dashboard-content">
-      <h1>Dashboard</h1>
+    <div className="dashboard-page">
 
-      <div className="cards">
-        <div className="card">
-          <h2>{data.totalUsers}</h2>
-          <p>Total Users</p>
+      {/* Background */}
+
+      <div className="dashboard-glow glow-left"></div>
+      <div className="dashboard-glow glow-right"></div>
+
+
+      {/* ======================================
+          HEADER
+      ====================================== */}
+
+      <div className="dashboard-header">
+
+        <div>
+          <span className="dashboard-label">
+            ADMIN CONTROL CENTER
+          </span>
+
+          <h1>
+            Dashboard
+          </h1>
+
+          <p>
+            Welcome back! Here's what's happening
+            with your store today.
+          </p>
         </div>
 
-        <div className="card">
-          <h2>{data.totalProducts}</h2>
-          <p>Total Products</p>
-        </div>
+        <button
+          className="refresh-btn"
+          onClick={() => {
+            setLoading(true);
+            setOrdersLoading(true);
+
+            fetchDashboard();
+            fetchOrders();
+
+            toast.success("Dashboard refreshed");
+          }}
+        >
+          ↻
+          <span>Refresh</span>
+        </button>
+
       </div>
 
-      <div className="recent-orders">
-        <div className="orders-header">
-          <div>
-            <h2>Recent Orders</h2>
-            <p>Latest orders from users</p>
+
+      {/* ======================================
+          STAT CARDS
+      ====================================== */}
+
+      <div className="dashboard-cards">
+
+        {/* USERS */}
+
+        <div className="dashboard-card users-card">
+
+          <div className="card-top">
+
+            <div className="card-icon">
+              👥
+            </div>
+
+            <span className="card-growth">
+              Active
+            </span>
+
           </div>
+
+          <div className="card-content">
+
+            <p>
+              Total Users
+            </p>
+
+            <h2>
+              {data.totalUsers}
+            </h2>
+
+            <span className="card-description">
+              Registered users
+            </span>
+
+          </div>
+
+          <div className="card-decoration"></div>
+
         </div>
 
+
+        {/* PRODUCTS */}
+
+        <div className="dashboard-card products-card">
+
+          <div className="card-top">
+
+            <div className="card-icon">
+              📦
+            </div>
+
+            <span className="card-growth">
+              Active
+            </span>
+
+          </div>
+
+          <div className="card-content">
+
+            <p>
+              Total Products
+            </p>
+
+            <h2>
+              {data.totalProducts}
+            </h2>
+
+            <span className="card-description">
+              Products available
+            </span>
+
+          </div>
+
+          <div className="card-decoration"></div>
+
+        </div>
+
+
+        {/* ORDERS */}
+
+        <div className="dashboard-card orders-card">
+
+          <div className="card-top">
+
+            <div className="card-icon">
+              🛒
+            </div>
+
+            <span className="card-growth">
+              Recent
+            </span>
+
+          </div>
+
+          <div className="card-content">
+
+            <p>
+              Total Orders
+            </p>
+
+            <h2>
+              {orders.length}
+            </h2>
+
+            <span className="card-description">
+              Orders received
+            </span>
+
+          </div>
+
+          <div className="card-decoration"></div>
+
+        </div>
+
+      </div>
+
+
+      {/* ======================================
+          RECENT ORDERS
+      ====================================== */}
+
+      <div className="recent-orders">
+
+        <div className="orders-header">
+
+          <div>
+
+            <span className="section-label">
+              ORDER MANAGEMENT
+            </span>
+
+            <h2>
+              Recent Orders
+            </h2>
+
+            <p>
+              Latest orders from your users
+            </p>
+
+          </div>
+
+          <div className="orders-count">
+            {orders.length} Orders
+          </div>
+
+        </div>
+
+
+        {/* Loading */}
+
         {ordersLoading ? (
-          <div className="orders-loading">Loading orders...</div>
+
+          <div className="orders-loading">
+
+            <div className="small-loader"></div>
+
+            <span>
+              Loading orders...
+            </span>
+
+          </div>
+
         ) : orders.length === 0 ? (
-          <div className="no-orders">No orders found</div>
+
+          /* No Orders */
+
+          <div className="no-orders">
+
+            <div className="empty-icon">
+              🛒
+            </div>
+
+            <h3>
+              No Orders Found
+            </h3>
+
+            <p>
+              There are currently no orders
+              available.
+            </p>
+
+          </div>
+
         ) : (
+
+          /* Orders Table */
+
           <div className="orders-table-wrapper">
+
             <table className="orders-table">
+
               <thead>
+
                 <tr>
                   <th>S.No</th>
                   <th>Order ID</th>
@@ -136,49 +409,135 @@ const Dashboard = () => {
                   <th>Status</th>
                   <th>Created At</th>
                 </tr>
+
               </thead>
 
+
               <tbody>
+
                 {orders.map((order, index) => (
-                  <tr key={order._id || index}>
-                    <td>{index + 1}</td>
+
+                  <tr
+                    key={
+                      order._id || index
+                    }
+                  >
 
                     <td>
-                      <strong>{order.orderId || order._id || "N/A"}</strong>
-                    </td>
-
-                    <td>
-                      {order.userId?.name ||
-                        order.user?.name ||
-                        order.name ||
-                        "N/A"}
-                    </td>
-
-                    <td>₹{order.totalAmount || order.amount || 0}</td>
-
-                    <td>
-                      <span
-                        className={`order-status ${
-                          order.status?.toLowerCase()?.replace(/\s+/g, "-") ||
-                          "pending"
-                        }`}
-                      >
-                        {order.status || "Pending"}
+                      <span className="serial-number">
+                        {String(index + 1).padStart(
+                          2,
+                          "0"
+                        )}
                       </span>
                     </td>
 
+
                     <td>
-                      {order.createdAt
-                        ? new Date(order.createdAt).toLocaleDateString()
-                        : "N/A"}
+
+                      <strong className="order-id">
+                        {order.orderId ||
+                          order._id ||
+                          "N/A"}
+                      </strong>
+
                     </td>
+
+
+                    <td>
+
+                      <div className="user-cell">
+
+                        <div className="user-avatar">
+                          {(
+                            order.userId?.name ||
+                            order.user?.name ||
+                            order.name ||
+                            "U"
+                          )
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+
+                        <span>
+                          {order.userId?.name ||
+                            order.user?.name ||
+                            order.name ||
+                            "N/A"}
+                        </span>
+
+                      </div>
+
+                    </td>
+
+
+                    <td>
+
+                      <strong className="amount">
+                        ₹
+                        {order.totalAmount ||
+                          order.amount ||
+                          0}
+                      </strong>
+
+                    </td>
+
+
+                    <td>
+
+                      <span
+                        className={`order-status ${
+                          order.status
+                            ?.toLowerCase()
+                            ?.replace(
+                              /\s+/g,
+                              "-"
+                            ) ||
+                          "pending"
+                        }`}
+                      >
+                        <span className="status-dot"></span>
+
+                        {order.status ||
+                          "Pending"}
+                      </span>
+
+                    </td>
+
+
+                    <td>
+
+                      <span className="order-date">
+                        {order.createdAt
+                          ? new Date(
+                              order.createdAt
+                            ).toLocaleDateString(
+                              "en-IN",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )
+                          : "N/A"}
+                      </span>
+
+                    </td>
+
                   </tr>
+
                 ))}
+
               </tbody>
+
             </table>
+
           </div>
+
         )}
+
       </div>
+
     </div>
   );
 };
